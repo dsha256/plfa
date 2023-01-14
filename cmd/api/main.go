@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/dsha256/plfa/internal/config"
+	"github.com/dsha256/plfa/internal/repository"
 	"github.com/dsha256/plfa/internal/ws"
 	"github.com/dsha256/plfa/pkg/dto"
 	"github.com/gorilla/websocket"
@@ -50,6 +51,8 @@ func bootstrap() {
 		//go wsClient.ReadMsgs()
 	}
 
+	aggregatedRepo := repository.NewAggregator()
+
 	// React on errors and system signals.
 	var pt dto.PragmaticTable
 	for {
@@ -59,7 +62,7 @@ func bootstrap() {
 			if err != nil {
 				panic(err)
 			}
-			log.Println(pt)
+			aggregatedRepo.AddTable(pt)
 		case err := <-errChan:
 			log.Println(err)
 		case sig := <-sigChan:
