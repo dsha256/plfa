@@ -2,7 +2,6 @@ package repository
 
 import (
 	"github.com/dsha256/plfa/pkg/dto"
-	"github.com/dsha256/plfa/pkg/utils"
 	"sync"
 )
 
@@ -18,7 +17,7 @@ func NewMapLiveFeedRepository() *MapLiveFeedRepository {
 }
 
 func (m *MapLiveFeedRepository) AddTable(table dto.PragmaticTable) {
-	id := utils.CombTbAndCurrIDs(table.TableId, table.Currency)
+	id := dto.CombTbAndCurrIDs(table.TableId, table.Currency)
 
 	m.mutex.Lock()
 	m.tables[id] = table
