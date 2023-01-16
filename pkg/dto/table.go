@@ -1,5 +1,7 @@
 package dto
 
+import "encoding/json"
+
 type Last20Results struct {
 	Time               string `json:"time"`
 	Result             int    `json:"result"`
@@ -36,8 +38,24 @@ type PragmaticTable struct {
 	Currency                  string          `json:"currency"`
 }
 
+// Bytes2PT unmarshal bytes array into PragmaticTable.
+func Bytes2PT(data []byte) (PragmaticTable, error) {
+	var pt PragmaticTable
+	err := json.Unmarshal(data, &pt)
+	if err != nil {
+		return PragmaticTable{}, err
+	}
+	return pt, nil
+}
+
 type PragmaticTableWithID struct {
 	// tID = 100; cID = 200 => TableAndCurrencyID = "100:200"
 	TableAndCurrencyID string         `json:"tableAndCurrencyID,omitempty"`
 	PragmaticTable     PragmaticTable `json:"pragmaticTable"`
+}
+
+// CombTbAndCurrIDs combines tableID and currencyID in the following format: "$(tableID):$(currencyID)"
+// Example: tableID = 100, currencyID = USD ==> "100:USD"
+func CombTbAndCurrIDs(tableID, currencyID string) string {
+	return tableID + ":" + currencyID
 }
