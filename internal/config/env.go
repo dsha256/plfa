@@ -51,8 +51,6 @@ func (env *ENV) Load() *ENV {
 	return env
 }
 
-// TODO: Reflection can make your life easier. Give this present to yourself this new year :)
-
 func (env *ENV) GetPragmaticFeedWsURL() string {
 	panicOnEmptyEnvVar(PragmaticFeedWsURL, env.PragmaticFeedWsURL)
 	return strCleanUp(env.PragmaticFeedWsURL)

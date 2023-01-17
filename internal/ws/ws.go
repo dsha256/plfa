@@ -17,7 +17,9 @@ const serverConnCloseTimeout = 1 * time.Second
 var (
 	interrupt = make(chan os.Signal, 1)
 	done      = make(chan struct{})
-	clients   = 0
+
+	// clients is started clients quantity.
+	clients = 0
 )
 
 func init() {
@@ -32,6 +34,8 @@ func NewClient(repo repository.AggregateRepository) *Client {
 	return &Client{repo: repo}
 }
 
+// RunAndListenClient creates and runs WS client based on the url passed in as a parameter. Then it writes the message
+// passed as a second parameter and writes incoming payload to the repository.
 func (client *Client) RunAndListenClient(url string, msg string) {
 
 	c, _, err := websocket.DefaultDialer.Dial(url, nil)
@@ -50,6 +54,7 @@ func (client *Client) RunAndListenClient(url string, msg string) {
 	go func() {
 		defer func() {
 			clients--
+			// Avoiding closing of closed channel.
 			if clients == 0 {
 				close(done)
 				return
