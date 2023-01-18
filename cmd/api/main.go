@@ -3,8 +3,11 @@ package main
 import (
 	"fmt"
 	"github.com/dsha256/plfa/internal/config"
+	"github.com/dsha256/plfa/internal/jsonlog"
 	"github.com/dsha256/plfa/internal/repository"
+	"github.com/dsha256/plfa/internal/server"
 	"github.com/dsha256/plfa/internal/ws"
+	"os"
 	"sync"
 )
 
@@ -21,11 +24,14 @@ func bootstrap() {
 	env := config.ENV{}
 	env.Load()
 
+	logger := jsonlog.New(os.Stdout, jsonlog.LevelInfo)
+
 	wg := sync.WaitGroup{}
 
 	aggregatedRepo := repository.NewAggregator()
 
 	msgs := genMsgs(env.GetTableIDs(), env.GetCurrencyIDs(), env.GetCasinoID())
+	// TODO: refactor for using custom logger
 	wsClient := ws.NewClient(aggregatedRepo)
 	for _, msg := range msgs {
 		wg.Add(1)
@@ -34,6 +40,16 @@ func bootstrap() {
 			wsClient.RunAndListenClient(env.GetPragmaticFeedWsURL(), msg)
 		}(msg)
 	}
+
+	newServer := server.NewServer(logger, aggregatedRepo)
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		err := newServer.Serve(env.GetServerPort())
+		if err != nil {
+			logger.PrintFatal(err, nil)
+		}
+	}()
 
 	wg.Wait()
 }
