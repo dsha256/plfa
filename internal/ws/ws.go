@@ -23,7 +23,7 @@ var (
 )
 
 func init() {
-	signal.Notify(interrupt, os.Interrupt, syscall.SIGQUIT)
+	signal.Notify(interrupt, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM)
 }
 
 type Client struct {
