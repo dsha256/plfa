@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/dsha256/plfa/internal/config"
 	"github.com/dsha256/plfa/internal/jsonlog"
+	"github.com/dsha256/plfa/internal/pusher"
 	"github.com/dsha256/plfa/internal/repository"
 	"github.com/dsha256/plfa/internal/server"
 	"github.com/dsha256/plfa/internal/ws"
@@ -30,6 +31,7 @@ func bootstrap() {
 
 	aggregatedRepo := repository.NewAggregator()
 
+	// Web Socket Client.
 	msgs := genMsgs(env.GetTableIDs(), env.GetCurrencyIDs(), env.GetCasinoID())
 	// TODO: refactor for using custom logger
 	wsClient := ws.NewClient(aggregatedRepo)
@@ -41,6 +43,7 @@ func bootstrap() {
 		}(msg)
 	}
 
+	// Server.
 	newServer := server.NewServer(logger, aggregatedRepo)
 	wg.Add(1)
 	go func() {
@@ -51,6 +54,33 @@ func bootstrap() {
 		}
 	}()
 
+	// Pusher Client.
+	pusherCfg := pusher.Configs{
+		Service: pusher.Service{
+			ChannelID:            env.GetPusherChannelID(),
+			PushingPeriodMinutes: env.GetPusherPeriodMinutes(),
+		},
+		Secrets: pusher.Secrets{
+			AppID:   env.GetPusherAppID(),
+			Key:     env.GetPusherKey(),
+			Secret:  env.GetPusherSecret(),
+			Cluster: env.GetPusherCluster(),
+			Secure:  true,
+		},
+		Repo:   aggregatedRepo,
+		Logger: logger,
+	}
+	pusherClient := pusher.NewClient(&pusherCfg)
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		err := pusherClient.StartPushing()
+		if err != nil {
+			logger.PrintFatal(err, nil)
+		}
+	}()
+
+	// Wait for all the services.
 	wg.Wait()
 }
 
