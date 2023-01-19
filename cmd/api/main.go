@@ -34,7 +34,7 @@ func bootstrap() {
 	// Web Socket Client.
 	msgs := genMsgs(env.GetTableIDs(), env.GetCurrencyIDs(), env.GetCasinoID())
 	// TODO: refactor for using custom logger
-	wsClient := ws.NewClient(aggregatedRepo)
+	wsClient := ws.NewClient(aggregatedRepo, logger)
 	for _, msg := range msgs {
 		wg.Add(1)
 		go func(msg string) {

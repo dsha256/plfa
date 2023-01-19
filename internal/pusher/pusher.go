@@ -74,7 +74,7 @@ func (c *Client) StartPushing() error {
 	})
 
 	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 
 	for {
 		select {
