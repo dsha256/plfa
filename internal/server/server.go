@@ -45,7 +45,7 @@ func (s *Server) Serve(port string) error {
 
 	go func() {
 		quit := make(chan os.Signal, 1)
-		signal.Notify(quit, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM)
+		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 		qs := <-quit
 		s.logger.PrintInfo("shutting down server", map[string]string{"signal": qs.String()})
 

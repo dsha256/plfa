@@ -3,3 +3,9 @@
 
 # Env
 .env
+
+# GNU Make
+Makefile
+
+# Build
+bin
