@@ -11,8 +11,12 @@ import (
 	"time"
 )
 
-const channelName = "update-pragmatic-live-feed-tables"
-const eventName = "LiveFeedTables"
+const (
+	// channelName is a Pusher's channel name.
+	channelName = "update-pragmatic-live-feed-tables"
+	// eventName is a Pusher's event name
+	eventName = "LiveFeedTables"
+)
 
 type Client struct {
 	client                *pusher.Client
