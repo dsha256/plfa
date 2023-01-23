@@ -5,7 +5,7 @@ import (
 	"github.com/dsha256/plfa/internal/mock"
 	"github.com/dsha256/plfa/pkg/dto"
 	"github.com/golang/mock/gomock"
-	"gopkg.in/stretchr/testify.v1/require"
+	"github.com/stretchr/testify/require"
 	"net/http"
 	"net/http/httptest"
 	"os"
