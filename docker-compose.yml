@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  pragmatic_live_feed_aggregator:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
