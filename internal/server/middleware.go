@@ -46,7 +46,7 @@ func (s *Server) rateLimit(next http.Handler) http.Handler {
 		// Lock the mutex to prevent this code from being executed concurrently.
 		mu.Lock()
 		if _, found := clients[ip]; !found {
-			clients[ip] = rate.NewLimiter(2, 4)
+			clients[ip] = rate.NewLimiter(10, 10)
 		}
 
 		if !clients[ip].Allow() {

@@ -17,6 +17,10 @@ const (
 	wsMsgTmpl = "{\"type\":\"subscribe\",\"key\":\"%s\",\"casinoId\":\"%s\",\"currency\":\"%s\"}"
 )
 
+// @title Pragmatic Live Feed Aggregator API Documentation
+// @version 1.0.0
+// @host localhost:8080
+// @BasePath /v1
 func main() {
 	bootstrap()
 }

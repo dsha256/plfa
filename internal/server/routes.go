@@ -1,7 +1,9 @@
 package server
 
 import (
+	_ "github.com/dsha256/plfa/docs/swagger"
 	"github.com/julienschmidt/httprouter"
+	httpSwagger "github.com/swaggo/http-swagger"
 	"net/http"
 )
 
@@ -11,6 +13,8 @@ func (s *Server) routes() http.Handler {
 	router.HandlerFunc(http.MethodGet, "/v1/healthcheck", s.healthcheckHandler)
 
 	router.HandlerFunc(http.MethodGet, "/v1/tables", s.listTablesHandler)
+
+	router.HandlerFunc("GET", "/v1/swagger/*any", httpSwagger.WrapHandler)
 
 	return s.metrics(s.recoverPanic(s.enableCORS(s.rateLimit(router))))
 }
