@@ -8,13 +8,17 @@ import (
 	"github.com/dsha256/plfa/internal/repository"
 	"github.com/dsha256/plfa/internal/server"
 	"github.com/dsha256/plfa/internal/ws"
+	"log"
 	"os"
+	"strings"
 	"sync"
 )
 
 const (
 	// wsMsgTmpl is a template for creating message to write into the Web Socket connection.
 	wsMsgTmpl = "{\"type\":\"subscribe\",\"key\":\"%s\",\"casinoId\":\"%s\",\"currency\":\"%s\"}"
+
+	configFilePath = "."
 )
 
 // @title Pragmatic Live Feed Aggregator API Documentation
@@ -26,8 +30,13 @@ func main() {
 }
 
 func bootstrap() {
-	env := config.ENV{}
-	env.Load()
+	//env := config.ENV{}
+	//env.Load()
+
+	cfg, err := config.LoadConfig(configFilePath)
+	if err != nil {
+		log.Fatalf("can not load config")
+	}
 
 	logger := jsonlog.New(os.Stdout, jsonlog.LevelInfo)
 
@@ -36,14 +45,14 @@ func bootstrap() {
 	aggregatedRepo := repository.NewAggregator()
 
 	// Web Socket Client.
-	msgs := genMsgs(env.GetTableIDs(), env.GetCurrencyIDs(), env.GetCasinoID())
+	msgs := genMsgs(str2slice(cfg.TableIDs, ","), str2slice(cfg.CurrencyIDs, ","), cfg.CasinoID)
 	// TODO: refactor for using custom logger
 	wsClient := ws.NewClient(aggregatedRepo, logger)
 	for _, msg := range msgs {
 		wg.Add(1)
 		go func(msg string) {
 			defer wg.Done()
-			wsClient.RunAndListenClient(env.GetPragmaticFeedWsURL(), msg)
+			wsClient.RunAndListenClient(cfg.PragmaticFeedWSURL, msg)
 		}(msg)
 	}
 
@@ -52,7 +61,7 @@ func bootstrap() {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		err := newServer.Serve(env.GetServerPort())
+		err := newServer.Serve(cfg.ServerPort)
 		if err != nil {
 			logger.PrintFatal(err, nil)
 		}
@@ -61,14 +70,14 @@ func bootstrap() {
 	// Pusher Client.
 	pusherCfg := pusher.Configs{
 		Service: pusher.Service{
-			ChannelID:            env.GetPusherChannelID(),
-			PushingPeriodMinutes: env.GetPusherPeriodMinutes(),
+			ChannelID:            cfg.PusherChannelID,
+			PushingPeriodMinutes: cfg.PusherPeriodMinutes,
 		},
 		Secrets: pusher.Secrets{
-			AppID:   env.GetPusherAppID(),
-			Key:     env.GetPusherKey(),
-			Secret:  env.GetPusherSecret(),
-			Cluster: env.GetPusherCluster(),
+			AppID:   cfg.PusherAppID,
+			Key:     cfg.PusherKey,
+			Secret:  cfg.PusherSecret,
+			Cluster: cfg.PusherCluster,
 			Secure:  true,
 		},
 		Repo:   aggregatedRepo,
@@ -97,4 +106,11 @@ func genMsgs(tbIDs, curIDs []string, casinoID string) []string {
 		}
 	}
 	return eventMsgs
+}
+
+func str2slice(str, sep string) []string {
+	if strings.HasSuffix(str, sep) {
+		str = str[:len(str)-2]
+	}
+	return strings.Split(str, sep)
 }
