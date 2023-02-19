@@ -9,6 +9,7 @@ import (
 
 	"github.com/dsha256/plfa/internal/jsonlog"
 	"github.com/dsha256/plfa/internal/repository"
+	"github.com/dsha256/plfa/pkg/atomic"
 	"github.com/dsha256/plfa/pkg/dto"
 	"github.com/gorilla/websocket"
 )
@@ -19,8 +20,8 @@ var (
 	interrupt = make(chan os.Signal, 1)
 	done      = make(chan struct{})
 
-	// clients is started clients quantity.
-	clients = 0
+	// clients is started clients atomic counter.
+	clients = atomic.NewValue()
 )
 
 type Client struct {
@@ -40,7 +41,7 @@ func (c *Client) RunAndListenClient(url string, msg string) {
 	if err != nil {
 		c.logger.PrintFatal(err, nil)
 	} else {
-		clients++
+		clients.Increment()
 	}
 	defer func(conn *websocket.Conn) {
 		err := conn.Close()
@@ -51,9 +52,9 @@ func (c *Client) RunAndListenClient(url string, msg string) {
 
 	go func() {
 		defer func() {
-			clients--
+			clients.Decrement()
 			// Avoiding closing of closed channel.
-			if clients == 0 {
+			if clients.Get() == 0 {
 				close(done)
 				return
 			}
