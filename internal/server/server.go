@@ -4,13 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/dsha256/plfa/internal/jsonlog"
-	"github.com/dsha256/plfa/internal/repository"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/dsha256/plfa/internal/jsonlog"
+	"github.com/dsha256/plfa/internal/repository"
 )
 
 const (

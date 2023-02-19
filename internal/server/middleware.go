@@ -3,13 +3,14 @@ package server
 import (
 	"expvar"
 	"fmt"
-	"github.com/felixge/httpsnoop"
-	"golang.org/x/time/rate"
 	"net"
 	"net/http"
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/felixge/httpsnoop"
+	"golang.org/x/time/rate"
 )
 
 func (s *Server) recoverPanic(next http.Handler) http.Handler {

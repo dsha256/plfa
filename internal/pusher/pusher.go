@@ -2,13 +2,14 @@ package pusher
 
 import (
 	"fmt"
-	"github.com/dsha256/plfa/internal/jsonlog"
-	"github.com/dsha256/plfa/internal/repository"
-	"github.com/pusher/pusher-http-go/v5"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/dsha256/plfa/internal/jsonlog"
+	"github.com/dsha256/plfa/internal/repository"
+	"github.com/pusher/pusher-http-go/v5"
 )
 
 const (
