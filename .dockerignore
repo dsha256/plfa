@@ -4,3 +4,5 @@ Dockerfile
 bin
 .github
 Makefile
+.idea
+app.env
