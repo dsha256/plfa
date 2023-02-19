@@ -2,16 +2,17 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"strings"
+	"sync"
+
 	"github.com/dsha256/plfa/internal/config"
 	"github.com/dsha256/plfa/internal/jsonlog"
 	"github.com/dsha256/plfa/internal/pusher"
 	"github.com/dsha256/plfa/internal/repository"
 	"github.com/dsha256/plfa/internal/server"
 	"github.com/dsha256/plfa/internal/ws"
-	"log"
-	"os"
-	"strings"
-	"sync"
 )
 
 const (
@@ -30,9 +31,8 @@ func main() {
 }
 
 func bootstrap() {
-	//env := config.ENV{}
-	//env.Load()
 
+	// TODO: refactor env-related logic for delivery workflow simplicity.
 	cfg, err := config.LoadConfig(configFilePath)
 	if err != nil {
 		log.Fatalf("can not load config")
