@@ -5,7 +5,7 @@ import "sync/atomic"
 // Value ...
 type Value uint32
 
-// NewValue creates and returns new Value
+// NewValue creates and returns new Value.
 func NewValue() Value {
 	return Value(0)
 }
