@@ -1,15 +1,16 @@
 package server
 
 import (
+	"net/http"
+	"net/http/httptest"
+	"os"
+	"testing"
+
 	"github.com/dsha256/plfa/internal/jsonlog"
 	"github.com/dsha256/plfa/internal/mock"
 	"github.com/dsha256/plfa/pkg/dto"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	"net/http"
-	"net/http/httptest"
-	"os"
-	"testing"
 )
 
 func TestHandlers_HealthcheckHandler(t *testing.T) {

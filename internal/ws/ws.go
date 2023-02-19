@@ -2,14 +2,15 @@ package ws
 
 import (
 	"errors"
-	"github.com/dsha256/plfa/internal/jsonlog"
-	"github.com/dsha256/plfa/internal/repository"
-	"github.com/dsha256/plfa/pkg/dto"
-	"github.com/gorilla/websocket"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/dsha256/plfa/internal/jsonlog"
+	"github.com/dsha256/plfa/internal/repository"
+	"github.com/dsha256/plfa/pkg/dto"
+	"github.com/gorilla/websocket"
 )
 
 const serverConnCloseTimeout = 1 * time.Second

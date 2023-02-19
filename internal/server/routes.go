@@ -1,10 +1,11 @@
 package server
 
 import (
+	"net/http"
+
 	_ "github.com/dsha256/plfa/docs/swagger"
 	"github.com/julienschmidt/httprouter"
 	httpSwagger "github.com/swaggo/http-swagger"
-	"net/http"
 )
 
 func (s *Server) routes() http.Handler {

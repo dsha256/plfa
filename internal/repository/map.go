@@ -1,8 +1,9 @@
 package repository
 
 import (
-	"github.com/dsha256/plfa/pkg/dto"
 	"sync"
+
+	"github.com/dsha256/plfa/pkg/dto"
 )
 
 type MapLiveFeedRepository struct {
