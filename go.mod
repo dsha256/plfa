@@ -9,7 +9,7 @@ require (
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/pusher/pusher-http-go/v5 v5.1.1
 	github.com/spf13/viper v1.15.0
-	github.com/stretchr/testify v1.8.1
+	github.com/stretchr/testify v1.8.2
 	github.com/swaggo/http-swagger v1.3.3
 	github.com/swaggo/swag v1.8.10
 	golang.org/x/time v0.3.0
