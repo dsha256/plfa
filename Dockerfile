@@ -9,7 +9,7 @@ COPY . .
 RUN CGO_ENABLED=0 go build -o ./bin/main ./cmd/api/main.go
 
 # Run stage
-FROM alpine:3.16
+FROM alpine:3.18
 
 WORKDIR app
 
