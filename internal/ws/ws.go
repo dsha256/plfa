@@ -20,7 +20,6 @@ var (
 	interrupt = make(chan os.Signal, 1)
 	done      = make(chan struct{})
 
-	// atomicClientsCounter is started atomicClientsCounter atomic counter.
 	atomicClientsCounter = atomic.Int32{}
 )
 
