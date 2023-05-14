@@ -92,10 +92,10 @@ func (c *Client) RunAndListenClient(url string, msg string) {
 	for {
 		select {
 		case <-done:
-			c.logger.PrintInfo("stopped WS atomicClientsCounter", nil)
+			c.logger.PrintInfo("stopped WS clients", nil)
 			return
 		case sig := <-interrupt:
-			c.logger.PrintInfo("shutting down WS atomicClientsCounter", map[string]string{"signal": sig.String()})
+			c.logger.PrintInfo("shutting down WS clients", map[string]string{"signal": sig.String()})
 
 			// Cleanly close the connection by sending a close message and then
 			// waiting (with timeout) for the server to close the connection.
