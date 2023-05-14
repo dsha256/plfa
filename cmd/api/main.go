@@ -40,13 +40,11 @@ func bootstrap() {
 
 	logger := jsonlog.New(os.Stdout, jsonlog.LevelInfo)
 
-	wg := sync.WaitGroup{}
-
 	aggregatedRepo := repository.NewAggregator()
 
-	// Web Socket Client.
+	wg := sync.WaitGroup{}
+
 	msgs := genMsgs(str2slice(cfg.TableIDs, ","), str2slice(cfg.CurrencyIDs, ","), cfg.CasinoID)
-	// TODO: refactor for using custom logger
 	wsClient := ws.NewClient(aggregatedRepo, logger)
 	for _, msg := range msgs {
 		wg.Add(1)
@@ -56,7 +54,6 @@ func bootstrap() {
 		}(msg)
 	}
 
-	// Server.
 	newServer := server.NewServer(logger, aggregatedRepo)
 	wg.Add(1)
 	go func() {
@@ -67,7 +64,6 @@ func bootstrap() {
 		}
 	}()
 
-	// Pusher Client.
 	pusherCfg := pusher.Configs{
 		Service: pusher.Service{
 			ChannelID:            cfg.PusherChannelID,
@@ -93,7 +89,6 @@ func bootstrap() {
 		}
 	}()
 
-	// Wait for all the services.
 	wg.Wait()
 }
 
