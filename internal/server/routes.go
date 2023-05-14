@@ -5,7 +5,7 @@ import (
 
 	_ "github.com/dsha256/plfa/docs/swagger"
 	"github.com/julienschmidt/httprouter"
-	httpSwagger "github.com/swaggo/http-swagger"
+	httpSwagger "github.com/swaggo/http-swagger/v2"
 )
 
 func (s *Server) routes() http.Handler {
