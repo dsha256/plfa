@@ -7,7 +7,7 @@
 ---
 
 # RUN in Docker Compose - Locally
-### For running the app locally you just need to create `app.env` file in the project root directory with the following environment variables in it:
+### For running the app locally you just need to create `.env` file in the project root directory with the following environment variables in it:
 ```dotenv
 PRAGMATIC_FEED_WS_URL= The vendor WS URL
 CASINO_ID= Casino's ID
