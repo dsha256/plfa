@@ -4,12 +4,12 @@ import (
 	"errors"
 	"os"
 	"os/signal"
+	"sync/atomic"
 	"syscall"
 	"time"
 
 	"github.com/dsha256/plfa/internal/jsonlog"
 	"github.com/dsha256/plfa/internal/repository"
-	"github.com/dsha256/plfa/pkg/atomic"
 	"github.com/dsha256/plfa/pkg/dto"
 	"github.com/gorilla/websocket"
 )
@@ -21,7 +21,7 @@ var (
 	done      = make(chan struct{})
 
 	// atomicClientsCounter is started atomicClientsCounter atomic counter.
-	atomicClientsCounter = atomic.NewValue()
+	atomicClientsCounter = atomic.Int32{}
 )
 
 type Client struct {
@@ -41,7 +41,7 @@ func (c *Client) RunAndListenClient(url string, msg string) {
 	if err != nil {
 		c.logger.PrintFatal(err, nil)
 	} else {
-		atomicClientsCounter.Increment()
+		atomicClientsCounter.Add(1)
 	}
 	defer func(conn *websocket.Conn) {
 		err := conn.Close()
@@ -52,9 +52,9 @@ func (c *Client) RunAndListenClient(url string, msg string) {
 
 	go func() {
 		defer func() {
-			atomicClientsCounter.Decrement()
+			atomicClientsCounter.Swap(atomicClientsCounter.Load() - 1)
 			// Avoiding closing of closed channel.
-			if atomicClientsCounter.Get() == 0 {
+			if atomicClientsCounter.Load() == 0 {
 				close(done)
 				return
 			}
