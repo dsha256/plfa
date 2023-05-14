@@ -20,8 +20,8 @@ var (
 	interrupt = make(chan os.Signal, 1)
 	done      = make(chan struct{})
 
-	// clients is started clients atomic counter.
-	clients = atomic.NewValue()
+	// atomicClientsCounter is started atomicClientsCounter atomic counter.
+	atomicClientsCounter = atomic.NewValue()
 )
 
 type Client struct {
@@ -41,7 +41,7 @@ func (c *Client) RunAndListenClient(url string, msg string) {
 	if err != nil {
 		c.logger.PrintFatal(err, nil)
 	} else {
-		clients.Increment()
+		atomicClientsCounter.Increment()
 	}
 	defer func(conn *websocket.Conn) {
 		err := conn.Close()
@@ -52,9 +52,9 @@ func (c *Client) RunAndListenClient(url string, msg string) {
 
 	go func() {
 		defer func() {
-			clients.Decrement()
+			atomicClientsCounter.Decrement()
 			// Avoiding closing of closed channel.
-			if clients.Get() == 0 {
+			if atomicClientsCounter.Get() == 0 {
 				close(done)
 				return
 			}
@@ -92,10 +92,10 @@ func (c *Client) RunAndListenClient(url string, msg string) {
 	for {
 		select {
 		case <-done:
-			c.logger.PrintInfo("stopped WS clients", nil)
+			c.logger.PrintInfo("stopped WS atomicClientsCounter", nil)
 			return
 		case sig := <-interrupt:
-			c.logger.PrintInfo("shutting down WS clients", map[string]string{"signal": sig.String()})
+			c.logger.PrintInfo("shutting down WS atomicClientsCounter", map[string]string{"signal": sig.String()})
 
 			// Cleanly close the connection by sending a close message and then
 			// waiting (with timeout) for the server to close the connection.
