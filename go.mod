@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/felixge/httpsnoop v1.0.3
 	github.com/golang/mock v1.6.0
-	github.com/gorilla/websocket v1.5.0
+	github.com/gorilla/websocket v1.5.3
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/pusher/pusher-http-go/v5 v5.1.1
 	github.com/spf13/viper v1.15.0
