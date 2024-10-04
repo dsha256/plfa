@@ -12,7 +12,7 @@ require (
 	github.com/stretchr/testify v1.8.4
 	github.com/swaggo/http-swagger/v2 v2.0.1
 	github.com/swaggo/swag v1.16.1
-	golang.org/x/time v0.3.0
+	golang.org/x/time v0.7.0
 )
 
 require (
