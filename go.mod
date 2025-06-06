@@ -1,6 +1,8 @@
 module github.com/dsha256/plfa
 
-go 1.20
+go 1.23.0
+
+toolchain go1.24.4
 
 require (
 	github.com/felixge/httpsnoop v1.0.3
@@ -12,7 +14,7 @@ require (
 	github.com/stretchr/testify v1.8.4
 	github.com/swaggo/http-swagger/v2 v2.0.1
 	github.com/swaggo/swag v1.16.1
-	golang.org/x/time v0.3.0
+	golang.org/x/time v0.12.0
 )
 
 require (
